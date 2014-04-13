@@ -129,7 +129,7 @@ public class InAppBillingPlugin extends CordovaPlugin {
 		Log.d(TAG, "init start");
 		// Some sanity checks to see if the developer (that's you!) really followed the
         // instructions to run this plugin
-	 	if (base64EncodedPublicKey.length() <= 0)) 
+	 	if (base64EncodedPublicKey.length() <= 0) 
 	 		throw new RuntimeException("Please set the inAppBillingKey in the init options");
 	 	
 	 	// Create the helper, passing it our context and the public key to verify signatures with
