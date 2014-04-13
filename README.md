@@ -81,8 +81,7 @@ It contains:
 * Enter the app description, logo, etc. then click on save
 * Add in-app purchases items from the Developer Console (activate them but do not publish the app)
 * Click on Services and APIs to get your public license key
-* In src/android/com/smartmobilesoftware/inappbilling open InAppBillingPlugin.java
-	* Add your public key (base64EncodedPublicKey)
+* In the init method pass in inAppBillingKey 
 * Wait 6-8 hours
 * Install the signed app on your test device in release mode. The Google Account on the test device should not be the same as the developer account).
 * Read carefully the Google testing guide to learn how to test your app : http://developer.android.com/guide/google/play/billing/billing_testing.html
@@ -98,7 +97,8 @@ parameters
 * error : The error callback.
 * options : Sets the options for the plugin
 	* Available Options :
-		* showLog [true,false] : showLog enables plugin JS debug messages. Default : true
+		* showLog [true,false] : showLog enables plugin JS debug messages. Default : false
+		* inAppBillingKey [Base64 String] : Your google in app billing key. Required
 
 #### Optional Initialization
 
@@ -109,6 +109,7 @@ parameters
 * options : Sets the options for the plugin
 	* Available Options :
 		* showLog [true,false] : showLog enables plugin JS debug messages. Default : true
+		* inAppBillingKey [Base64 String] : Your google in app billing key. Required
 * skus : string or string[] of product skus. ie. "prod1" or ["prod1","prod2]
 
 #### Retrieve owned products
@@ -193,7 +194,7 @@ The list of the available product(s) in inventory.
 Quick example
 ---------------
 ```javascript
-inappbilling.init(successInit,errorCallback, {showLog:true})
+inappbilling.init(successInit,errorCallback, {showLog:true, inAppBillingKey: "12345678ABCD" })
 
 function successInit(result) {    
 	// display the extracted text   
@@ -238,7 +239,7 @@ Full example
             // Click on init button
 			function init(){
 				// Initialize the billing plugin
-				inappbilling.init(successHandler, errorHandler, {showLog:true});
+				inappbilling.init(successHandler, errorHandler, {showLog:true, inAppBillingKey: "123456789ABCD"});
 			}
 
 			// Click on purchase button
