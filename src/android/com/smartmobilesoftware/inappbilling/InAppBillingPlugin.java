@@ -2,7 +2,7 @@
  * In App Billing Plugin
  * @author Guillaume Charhon - Smart Mobile Software
  * @modifications Brian Thurlow 10/16/13
- *
+ * @modifications Alexander H J Belch 13/04/2014
  */
 package com.smartmobilesoftware.inappbilling;
 
@@ -30,18 +30,12 @@ public class InAppBillingPlugin extends CordovaPlugin {
 	private final String TAG = "CORDOVA_BILLING";
 	
 	
-	/* base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
+    /* 
+     * base64EncodedPublicKey should be YOUR APPLICATION'S PUBLIC KEY
      * (that you got from the Google Play developer console). This is not your
      * developer public key, it's the *app-specific* public key.
-     *
-     * Instead of just storing the entire literal string here embedded in the
-     * program,  construct the key at runtime from pieces or
-     * use bit manipulation (for example, XOR with some other string) to hide
-     * the actual key.  The key itself is not secret information, but we don't
-     * want to make it easy for an attacker to replace the public key with one
-     * of their own and then fake messages from the server.
      */
-    private final String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkYbZ4R1GpZTO1GAA2FK6iC0QdXY56GT5oQtmsovDnPBALuSQ2Y02HVKh12E3r36GLzDjtyoJnNNq5UQf2jOblWxzwYHAsjl4nzhmkE7I66Twnn8G/ynqbVZxiotjSoT9L6B3RUI5vSy18ewLfxYgXq6gr46SsAa3N6urr2Wjbp5Z3rhv1LfzFcUrb2sAzy4T6QkDN9ybwYJt1X6ig58khduhh5KKjVIVGKlV51ewi9sCUGoex3F2sW/qll1mMKSXWe9qvkDKUug3dTdp2Acns/wbQVWcOGO6nwoFBR8VXPchIvHfoNmHb9eFWCW/cIlvzVipA3wOXCFPn0jwsUkq/QIDAQAB";
+    private String base64EncodedPublicKey = "";
     
     // (arbitrary) request code for the purchase flow
     static final int RC_REQUEST = 10001;
@@ -68,7 +62,11 @@ public class InAppBillingPlugin extends CordovaPlugin {
 			if ("init".equals(action)) {
 				final List<String> sku = new ArrayList<String>();
 				if(data.length() > 0){
-					JSONArray jsonSkuList = new JSONArray(data.getString(0));
+                                        base64EncodedPublicKey = data.getString(0);
+                                }
+
+                                if (data.length() > 1) {
+					JSONArray jsonSkuList = new JSONArray(data.getString(1));
 					int len = jsonSkuList.length();
 					Log.d(TAG, "Num SKUs Found: "+len);
 	   			 for (int i=0;i<len;i++){
@@ -131,8 +129,8 @@ public class InAppBillingPlugin extends CordovaPlugin {
 		Log.d(TAG, "init start");
 		// Some sanity checks to see if the developer (that's you!) really followed the
         // instructions to run this plugin
-	 	if (base64EncodedPublicKey.contains("CONSTRUCT_YOUR")) 
-	 		throw new RuntimeException("Please put your app's public key in InAppBillingPlugin.java. See ReadMe.");
+	 	if (base64EncodedPublicKey.length() <= 0)) 
+	 		throw new RuntimeException("Please set the inAppBillingKey in the init options");
 	 	
 	 	// Create the helper, passing it our context and the public key to verify signatures with
         Log.d(TAG, "Creating IAB helper.");

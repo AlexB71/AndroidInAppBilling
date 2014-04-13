@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2012-2013 by Guillaume Charhon
  * Modifications 10/16/2013 by Brian Thurlow
+ * Further Modifications 13/04/2014 by Alexander H J Belch
  */
 var log = function (msg) {
     console.log("InAppBilling[js]: " + msg);
@@ -14,7 +15,8 @@ InAppBilling.prototype.init = function (success, fail, options, skus) {
 	options || (options = {});
 
 	this.options = {
-		showLog: options.showLog || true
+		showLog: options.showLog || false,
+                inAppBillingKey: options.inAppBillingKey || ""
 	};
 	
 	if (this.options.showLog) {
@@ -40,10 +42,10 @@ InAppBilling.prototype.init = function (success, fail, options, skus) {
 	}
 	
 	if(hasSKUs){
-		return cordova.exec(success, fail, "InAppBillingPlugin", "init", [skus]);
+		return cordova.exec(success, fail, "InAppBillingPlugin", "init", [this.options.inAppBillingKey, skus]);
     }else {
         //No SKUs
-		return cordova.exec(success, fail, "InAppBillingPlugin", "init", []);
+		return cordova.exec(success, fail, "InAppBillingPlugin", "init", [this.options.inAppBillingKey]);
     }
 };
 InAppBilling.prototype.getPurchases = function (success, fail) {
